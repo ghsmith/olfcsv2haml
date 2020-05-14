@@ -69,7 +69,7 @@ public class MainFileProcessor {
 
                 Haml.PatientAntibodyAssessment.SolidPhasePanel.Bead bead = of.createHamlPatientAntibodyAssessmentSolidPhasePanelBead();
                 spp.getBead().add(bead);
-                bead.setHLAAlleleSpecificity(csvRecord.get("Specificity").replaceAll(",?-,?", ""));
+                bead.setHLAAlleleSpecificity(csvRecord.get("Specificity").replaceAll("(-,?)|(-$)", "").replaceAll(",$", ""));
                 bead.setRawMFI(Math.round(Float.valueOf(csvRecord.get("NormalValue"))));
 
             }
@@ -95,6 +95,7 @@ public class MainFileProcessor {
                     }).collect(Collectors.toList())
                 ) {
                     bead.setRanking(bead.getRawMFI() > (lastBead != null ? lastBead.getRawMFI() : 0) ? ++ranking : ranking);
+                    lastBead = bead;
                 }
             }
 
